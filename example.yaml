@@ -1,0 +1,17 @@
+{{- $cmdline := or .cmdline "console=ttyS0,115200n8 root=/dev/sda3 ro" -}}
+
+architecture: amd64
+
+actions:
+  - action: debootstrap
+    suite: buster
+    variant: minbase
+
+  - action: run
+    description: "adding cmdline"
+    chroot: true
+    command: echo "{{ $cmdline }}" > /etc/cmdline
+
+  - action: pack
+    file: result.tar.gz
+    compression: gz
